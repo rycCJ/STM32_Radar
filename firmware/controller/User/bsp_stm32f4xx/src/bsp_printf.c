@@ -1,3 +1,4 @@
+#include "controller_link.h"
 /*
 *********************************************************************************************************
 *	                                  
@@ -34,6 +35,7 @@
 */
 int fputc(int ch, FILE *f)
 {
+    if (ControllerLink_Quiet()) return ch;
 	/* 写一个字节到USART1 */
 	USART_SendData(USART1, (uint8_t) ch);
 

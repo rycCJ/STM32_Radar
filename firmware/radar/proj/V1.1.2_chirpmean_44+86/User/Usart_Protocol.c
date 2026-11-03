@@ -1,3 +1,4 @@
+#include "Capture_Output.h"
 #include "Usart_Protocol.h"
 #include "main.h"
 #include <complex.h>
@@ -123,12 +124,14 @@ static char Protocol_Analysis_Handle(void)
 		memset(&udata,0,sizeof(udata));
 		strUsart.RecLen--;     //È¥µô\n
 		//RF
-		if(memcmp(strUsart.RecBuff,"AT",AT_LEN)==0&&(strUsart.RecLen==AT_LEN)){
+		if(Capture_Command(strUsart.RecBuff,strUsart.RecLen)) { }
+        else if(memcmp(strUsart.RecBuff,"AT",AT_LEN)==0&&(strUsart.RecLen==AT_LEN)){
 			printf("AT+OK\n");
 
 		}
 		else if(memcmp(strUsart.RecBuff,"AT+START",AT_START_LEN)==0&&(strUsart.RecLen==AT_START_LEN)){
-			r2_str.WorkMode = 1;
+			Capture_Started();
+            r2_str.WorkMode = 1;
 		}
 		else if(memcmp(strUsart.RecBuff,"AT+RESET",AT_RESET_LEN)==0&&(strUsart.RecLen==AT_RESET_LEN)){
 //			NVIC_SystemReset();

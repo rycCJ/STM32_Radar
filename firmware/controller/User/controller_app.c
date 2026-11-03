@@ -1,3 +1,4 @@
+#include "controller_link.h"
 #include "bsp.h"			
 
 __IO uint32_t TimeOut = 0x00; 
@@ -14,7 +15,7 @@ static float elevation_angle = 0;
 	
 //	int32_t iRunTime = 0; //用于打印代码运行时间
 	
-void Controller_Init(void)
+void ControllerLegacy_Init(void)
 {
 	bsp_Init();	/*所有硬件外设的初始化*/
 	
@@ -111,9 +112,27 @@ static void Controller_Report(void)
 		
 	
 }
-void Controller_Poll(void)
+void ControllerLegacy_Poll(void)
 {
  Controller_ProcessRadar();
  Controller_ProcessComm();
  Controller_Report();
+}
+
+void Controller_Init(void) {
+    bsp_Init();
+    ControllerLink_Init();
+    bsp_StartAutoTimer(1,100);
+}
+void Controller_Poll(void) {
+    ControllerLink_Poll();
+    if (uart3_rx_finish) {
+        memset(uart3_rx_buffer,0,uart3_rx_buffer_size); uart3_rx_finish=0;
+    }
+    if (bsp_CheckTimer(1)==1) {
+        uint16_t count=ControllerPoints_Count();
+        uint8_t report[6]={0x55,0xAA,0,0,0xAA,0x55};
+        report[2]=(uint8_t)count; report[3]=(uint8_t)(count>>8);
+        Usart_SendStr_length(USART3,report,6);
+    }
 }

@@ -1,4 +1,5 @@
 #include "Radar_Internal.h"
+#include "Capture_Output.h"
 void Func02_Handle(void)
 {
     uint64_t sDMA_Cfg2 = (uint64_t)ADC_BYTE << BB_BIT32_POS | (uint64_t)(ADC_SAMPLE_ADDR); //srcIntraInc,srcBaseAddr
@@ -44,6 +45,7 @@ void Func02_Handle(void)
         BB_ISR_CLEAR(BB_ISR_PREP_RAMP_END | BB_ISR_PREP_QUARTER_END | BB_ISR_PREP_FRAME_END);
         BB_OPGATE_EN(BB_GATE_PREP | BB_GATE_P1MUL | BB_GATE_DMA | BB_GATE_FFT);
         BB_OPCLEAR(BB_CLEAR_PREP);
+        Capture_Begin();
         waveGenStart();
 //              while( (bb_regb_str->ISR & (BB_ISR_PREP_FRAME_END))==0);
 #endif
@@ -614,13 +616,7 @@ void Func02_Handle(void)
         rtc_last = rtc_current;
         ProtocolSendLen = ProtocolSendPack(frameRst, ProtocolPackBuff, frameTime);
 
-						USART_Transmit_Bytes(&USART0, (uint8_t*)start_FFT,2);
-						USART_Transmit_Bytes(&USART0,(uint8_t *)realSUM, sizeof(realSUM));
-						USART_Transmit_Bytes(&USART0,(uint8_t *)imageSUM, sizeof(imageSUM));
-
-					USART_Transmit_Bytes(&USART0, (uint8_t*)end_FFT,2);
-
-				USART_Transmit_Bytes(&USART0, (uint8_t*)&ProtocolPackBuff[0],ProtocolSendLen);
+        Capture_SendResult(realSUM, imageSUM, RANGE_BIN, ProtocolPackBuff, ProtocolSendLen);
 	
 					
 		

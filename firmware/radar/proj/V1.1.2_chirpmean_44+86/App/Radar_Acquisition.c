@@ -1,4 +1,5 @@
 #include "Radar_Internal.h"
+#include "Capture_Output.h"
 void Func01_Handle(void)
 {
     static uint8_t scmd = 0;
@@ -16,6 +17,7 @@ void Func01_Handle(void)
 //          memset((uint8_t *)ADC_SAMPLE_ADDR,0,10*1024);
         BB_ISR_CLEAR(BB_ISR_PREP_FRAME_END | BB_ISR_PREP_RAMP_END);
         BB_OPGATE_EN(BB_GATE_PREP);
+        Capture_Begin();
         waveGenStart();
         BB_waitISR(BB_ISR_PREP_FRAME_END);
         BB_OPGATE_DIS(BB_GATE_PREP);
@@ -60,32 +62,7 @@ void Func01_Handle(void)
 //              OSPI_Trans64((uint64_t *)(ADC_SAMPLE_ADDR),1048576);
 //          }
 //          OSPI_Trans64((uint64_t *)(ADC_SAMPLE_ADDR),1048576);
-        USART_Transmit_Bytes(&USART0, (uint8_t *)&head[0], 8);
-		// USART_Transmit_Bytes(&USART0, (uint8_t *)ADC_SAMPLE_ADDR, 1048576);
-		// 输出缓存起始位置的512个采样，即1024字节
-				USART_Transmit_Bytes(
-						&USART0,
-						(uint8_t *)ADC_SAMPLE_ADDR,
-						ADC_MAX_LEN * ADC_BYTE
-				);
-//				for (uint32_t offset = 0; offset < total; )
-//				{
-//						uint32_t len = total - offset;
-
-//						if (len > 1024)
-//								len = 1024;
-
-//						WDT_CLEAR_COUNTER;
-
-//						USART_Transmit_Bytes(
-//								&USART0,
-//								(uint8_t *)ADC_SAMPLE_ADDR + offset,
-//								len
-//						);
-
-//						offset += len;
-//				}
-//		USART_Transmit_Bytes(&USART0, (uint8_t *)ADC_SAMPLE_ADDR, ADC_MAX_LEN * ADC_BYTE);
+        Capture_SendADC((const void *)ADC_SAMPLE_ADDR, ADC_MAX_LEN * ADC_BYTE);
         Cnt_Delay_ms(200);
 //          printf("over\n");
 //          while(1);

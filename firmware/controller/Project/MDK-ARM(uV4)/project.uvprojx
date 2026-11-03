@@ -341,7 +341,7 @@
               <MiscControls>--diag_suppress=870</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\HARDWARE\LED;..\SYSTEM\sys;..\HARDWARE\BEEP;..\HARDWARE\STMFLASH;..\HARDWARE\PARAMETER</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -497,7 +497,7 @@
             </File>
           </Files>
         </Group>
-      <Group><GroupName>Application</GroupName><Files><File><FileName>controller_app.c</FileName><FileType>1</FileType><FilePath>..\..\User\controller_app.c</FilePath></File></Files></Group></Groups>
+      <Group><GroupName>Application</GroupName><Files><File><FileName>controller_app.c</FileName><FileType>1</FileType><FilePath>..\..\User\controller_app.c</FilePath></File></Files></Group><Group><GroupName>Capture bridge</GroupName><Files><File><FileName>controller_link.c</FileName><FileType>1</FileType><FilePath>..\..\User\controller_link.c</FilePath></File><File><FileName>controller_points.c</FileName><FileType>1</FileType><FilePath>..\..\User\controller_points.c</FilePath></File></Files></Group></Groups>
     </Target>
   </Targets>
 

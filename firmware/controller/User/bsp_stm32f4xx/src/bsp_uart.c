@@ -68,9 +68,13 @@ void bsp_init_uart2(void)
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStructure.GPIO_Pin = USART2_TX_PIN;
 	GPIO_Init(USART2_TX_GPIO_PORT, &GPIO_InitStructure);
 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Pin = USART2_RX_PIN;
 	GPIO_Init(USART2_RX_GPIO_PORT, &GPIO_InitStructure);
 

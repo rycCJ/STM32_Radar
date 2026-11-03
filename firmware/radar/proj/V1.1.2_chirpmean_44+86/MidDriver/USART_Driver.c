@@ -111,12 +111,22 @@ void USCI4_IRQHandler(void)
     {
         switch(r2_str.WorkMode){
             case 0: //config
-                if(strUsart.RecFinish)
-                    return;
-                strUsart.timeoutStart = 1;
-                strUsart.timeoutCnt = 0;
-                strUsart.RecBuff[strUsart.RecLen] = USART0.instance->TRX;
-                strUsart.RecLen++;
+                {
+                    static uint8_t discard_line;
+                    uint8_t value=(uint8_t)USART0.instance->TRX;
+                    if (strUsart.RecFinish) break;
+                    if (discard_line) {
+                        if (value=='\n') discard_line=0;
+                        break;
+                    }
+                    if (strUsart.RecLen>=USART_REC_MAX_LEN) {
+                        strUsart.RecLen=0; strUsart.timeoutStart=0;
+                        discard_line=(value!='\n'); break;
+                    }
+                    strUsart.RecBuff[strUsart.RecLen++]=value;
+                    strUsart.timeoutStart=1; strUsart.timeoutCnt=0;
+                    if (value=='\n') { strUsart.RecFinish=1; strUsart.timeoutStart=0; }
+                }
                 break;
             case 1: //func
                 // NVIC_SystemReset();

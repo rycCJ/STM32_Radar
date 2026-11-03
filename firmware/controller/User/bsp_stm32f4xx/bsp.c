@@ -35,8 +35,6 @@ void bsp_Init(void)
 		bsp_InitTimer(); //软件计时器
 		bsp_init_uart1();
 		bsp_init_uart3();
-		bsp_init_uart2_dma();  //串口2 
-		LED_Init(); //LED、STM32控制雷达复位引脚
 	
 }
 
