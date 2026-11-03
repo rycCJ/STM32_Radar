@@ -557,7 +557,7 @@
             </File>
           </Files>
         </Group>
-      </Groups>
+      <Group><GroupName>Application modules</GroupName><Files><File><FileName>App_Runtime.c</FileName><FileType>1</FileType><FilePath>.\User\App_Runtime.c</FilePath></File><File><FileName>Radar_Calibration.c</FileName><FileType>1</FileType><FilePath>.\App\Radar_Calibration.c</FilePath></File><File><FileName>Radar_Acquisition.c</FileName><FileType>1</FileType><FilePath>.\App\Radar_Acquisition.c</FilePath></File><File><FileName>Radar_PointPacket.c</FileName><FileType>1</FileType><FilePath>.\User\Radar_PointPacket.c</FilePath></File></Files></Group></Groups>
     </Target>
   </Targets>
 

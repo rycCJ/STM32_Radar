@@ -497,7 +497,7 @@
             </File>
           </Files>
         </Group>
-      </Groups>
+      <Group><GroupName>Application</GroupName><Files><File><FileName>controller_app.c</FileName><FileType>1</FileType><FilePath>..\..\User\controller_app.c</FilePath></File></Files></Group></Groups>
     </Target>
   </Targets>
 
