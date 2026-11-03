@@ -1,0 +1,6 @@
+# Preserve supplied firmware byte-for-byte, including legacy encodings/EOLs.
+* -text
+*.py text eol=lf
+*.md text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
