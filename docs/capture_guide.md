@@ -12,26 +12,27 @@
 
 双链路表示两种可切换接法，不表示两个主机可以同时向雷达发命令。采集工具的 `--link` 不会替你隔离硬件发送端。
 
-## 建立环境
+## 复用已有环境
 
-在仓库根目录运行：
+优先使用已有的 `D:\code\Script\venv`。在仓库根目录运行以下命令，直接指定该环境的解释器，无需新建或激活环境：
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r process_data/requirements_capture.txt
-.\.venv\Scripts\python.exe -m serial.tools.list_ports -v
+$RadarPython = 'D:\code\Script\venv\Scripts\python.exe'
+& $RadarPython -m serial.tools.list_ports -v
 ```
 
-本次实施已在本地 `.venv` 安装pyserial 3.5。已有分析脚本的numpy/scipy等依赖仍由 `requirements_adc.txt` 管理，不与轻量采集器绑定。
+2026-11-06已核实该环境为Python 3.11.6，pyserial 3.5的 `Serial` 接口可用，且已有NumPy 2.2.6、SciPy 1.16.1、Matplotlib 3.10.5，无需为当前采集命令重复安装依赖。仓库根目录决定脚本和数据的相对路径，使用哪个Python环境由解释器路径决定。
+
+若换用其他已有环境，先检查依赖，确实缺少时再按 `requirements_capture.txt` 安装。分析脚本的依赖仍由 `requirements_adc.txt` 管理，轻量采集器只依赖pyserial。项目内上一轮创建的 `.venv` 保留，但不作为默认环境。
 
 ## 选择模式并记录
 
 ```powershell
 # 电脑直连雷达；COM5改为实际雷达端口
-.\.venv\Scripts\python.exe process_data/capture_serial.py --port COM5 --link direct --mode IQ --duration 180 --output captures/iq_001
+& $RadarPython process_data/capture_serial.py --port COM5 --link direct --mode IQ --duration 180 --output captures/iq_001
 
 # 电脑连接中控串口1；先断开直连雷达的电脑TX线
-.\.venv\Scripts\python.exe process_data/capture_serial.py --port COM6 --link bridge --mode ADC --duration 180 --output captures/adc_bridge_001
+& $RadarPython process_data/capture_serial.py --port COM6 --link bridge --mode ADC --duration 180 --output captures/adc_bridge_001
 ```
 
 `--mode` 可选ADC/IQ/POINT/LEGACY。默认921600波特率、180秒、LEGACY；独立ADC/IQ/POINT使用新帧。每次记录必须使用不存在的输出目录，工具拒绝覆盖已有会话。
@@ -51,8 +52,8 @@ python -m venv .venv
 
 ```powershell
 # 流式解码，输出目录应已存在，输出文件应尚不存在
-python process_data/decode_capture.py captures/iq_001/raw.bin --format new --values --output captures/iq_001/decoded.jsonl
-python process_data/decode_capture.py captures/legacy_001/raw.bin --format legacy --values --output captures/legacy_001/decoded.jsonl
+& $RadarPython process_data/decode_capture.py captures/iq_001/raw.bin --format new --values --output captures/iq_001/decoded.jsonl
+& $RadarPython process_data/decode_capture.py captures/legacy_001/raw.bin --format legacy --values --output captures/legacy_001/decoded.jsonl
 # 旧ADC文件用 --format adc-legacy
 ```
 

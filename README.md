@@ -20,19 +20,22 @@
 保留 ARM Compiler 5.06 update 7，不迁移 HAL、RTOS 或编译器。
 
 ```powershell
+$RadarPython = 'D:\code\Script\venv\Scripts\python.exe'
 powershell -ExecutionPolicy Bypass -File tools/build.ps1 -Rebuild
-python tools/check_projects.py
-python -m unittest discover -s tests -v
+& $RadarPython tools/check_projects.py
+& $RadarPython -m unittest discover -s tests -v
 ```
 
 ## 首次采集
 
 先阅读接线说明并烧录两套新固件。中控默认释放雷达控制权；旧中控固件没有该功能。
 
+优先复用已有的 `D:\code\Script\venv`，其中已确认有pyserial 3.5及NumPy、SciPy、Matplotlib。直接指定解释器即可，无需创建或激活项目内的 `.venv`。
+
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r process_data/requirements_capture.txt
-.\.venv\Scripts\python.exe process_data/capture_serial.py --port COM5 --link direct --mode IQ --duration 180 --output captures/iq_first
+$RadarPython = 'D:\code\Script\venv\Scripts\python.exe'
+& $RadarPython -m serial.tools.list_ports -v
+& $RadarPython process_data/capture_serial.py --port COM5 --link direct --mode IQ --duration 180 --output captures/iq_first
 ```
 
 `COM5` 是示例，必须替换为实际端口。现有 `process_data` 数据和脚本保留；采集数据、构建产物、本地虚拟环境不提交到 Git。原始会员资料目录未修改，也不作为新工程的构建依赖。
